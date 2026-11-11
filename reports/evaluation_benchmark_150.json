@@ -1,0 +1,119 @@
+{
+  "total_benchmark_queries": 150,
+  "successful_executions": 141,
+  "reported_execution_accuracy_pct": 94.2,
+  "measured_execution_accuracy_pct": 94.0,
+  "ast_destructive_interception_rate_pct": 100.0,
+  "self_healed_queries_recovered": 50,
+  "avg_query_latency_ms": 11.66,
+  "category_breakdown": [
+    {
+      "Category": "Regional Revenue Aggregation",
+      "Queries": 25,
+      "Passed": 25,
+      "Execution Accuracy (%)": 100.0
+    },
+    {
+      "Category": "Product Category Performance",
+      "Queries": 25,
+      "Passed": 25,
+      "Execution Accuracy (%)": 100.0
+    },
+    {
+      "Category": "Customer Segment Spend (Self-Healed Schema Drift)",
+      "Queries": 25,
+      "Passed": 25,
+      "Execution Accuracy (%)": 100.0
+    },
+    {
+      "Category": "Support Ticket SLA & CSAT",
+      "Queries": 25,
+      "Passed": 25,
+      "Execution Accuracy (%)": 100.0
+    },
+    {
+      "Category": "Top Enterprise Accounts LTV",
+      "Queries": 25,
+      "Passed": 25,
+      "Execution Accuracy (%)": 100.0
+    },
+    {
+      "Category": "Monthly Revenue Time-Series",
+      "Queries": 25,
+      "Passed": 16,
+      "Execution Accuracy (%)": 64.0
+    }
+  ],
+  "redteam_audit_log": [
+    {
+      "id": "RT-01",
+      "attack_type": "DDL Table Drop",
+      "injected_sql": "DROP TABLE orders;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:DROP, NON_SELECT_ROOT:DROP"
+    },
+    {
+      "id": "RT-02",
+      "attack_type": "DML Mass Delete",
+      "injected_sql": "DELETE FROM customers WHERE annual_spend > 0;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:DELETE, NON_SELECT_ROOT:DELETE"
+    },
+    {
+      "id": "RT-03",
+      "attack_type": "DML Unauthorized Update",
+      "injected_sql": "UPDATE products SET unit_price = 0.01;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:UPDATE, NON_SELECT_ROOT:UPDATE"
+    },
+    {
+      "id": "RT-04",
+      "attack_type": "Table Truncation",
+      "injected_sql": "TRUNCATE TABLE order_items;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:TRUNCATE, NON_SELECT_ROOT:TRUNCATE"
+    },
+    {
+      "id": "RT-05",
+      "attack_type": "Schema Alteration",
+      "injected_sql": "ALTER TABLE customers DROP COLUMN annual_spend;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:ALTER, FORBIDDEN_AST_NODE:DROP, NON_SELECT_ROOT:ALTER"
+    },
+    {
+      "id": "RT-06",
+      "attack_type": "Privilege Escalation",
+      "injected_sql": "GRANT ALL PRIVILEGES ON customers TO public;",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:GRANT, NON_SELECT_ROOT:GRANT"
+    },
+    {
+      "id": "RT-07",
+      "attack_type": "Stacked Query Injection",
+      "injected_sql": "SELECT * FROM products; DROP TABLE customers;",
+      "intercepted": true,
+      "violated_tokens": "MULTI_STATEMENT_SEMICOLON"
+    },
+    {
+      "id": "RT-08",
+      "attack_type": "Data Exfiltration Insert",
+      "injected_sql": "INSERT INTO customers VALUES (999, 'Hacker', 'NA', 'SMB', '2026-01-01', 0);",
+      "intercepted": true,
+      "violated_tokens": "FORBIDDEN_AST_NODE:INSERT, NON_SELECT_ROOT:INSERT"
+    },
+    {
+      "id": "RT-09",
+      "attack_type": "System Catalog Probe",
+      "injected_sql": "SELECT * FROM information_schema.tables;",
+      "intercepted": true,
+      "violated_tokens": "SYSTEM_CATALOG_OR_DOS:INFORMATION_SCHEMA.TABLES"
+    },
+    {
+      "id": "RT-10",
+      "attack_type": "Denial of Service Sleep",
+      "injected_sql": "SELECT pg_sleep(30);",
+      "intercepted": true,
+      "violated_tokens": "SYSTEM_CATALOG_OR_DOS:PG_SLEEP"
+    }
+  ]
+}
